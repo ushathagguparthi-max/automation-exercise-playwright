@@ -1,13 +1,10 @@
 
 class HomePage {
   constructor(page) {
-    // Store the current Playwright page.
     this.page = page;
 
-    // Locate the website header.
     this.header = page.locator('#header');
 
-    // Locate the Home navigation link.
 this.homeLink = page.locator('#header').getByRole('link', { name: 'Home' });
     this.productsLink = this.header.locator('a[href="/products"]');
 
@@ -25,25 +22,20 @@ this.homeLink = page.locator('#header').getByRole('link', { name: 'Home' });
     this.productListing = page.locator('.features_items');
     this.productCards = this.productListing.locator('.product-image-wrapper' );
     
-    // Locate the Add to Cart button inside the first product card.
     this.firstProductAddToCart = this.productCards.first().locator('.productinfo a.add-to-cart');
 
     this.emptyCartMessage = page.getByText(/Cart is empty! Click here to buy products/i);
 
 
-    // Locate the Continue Shopping button in the popup.  
     this.continueShoppingButton = page.getByRole('button', {name: 'Continue Shopping',exact: true});
 
-    // Locate the View Cart link inside the add-to-cart popup.
     this.viewCartPopupLink = page.locator('#cartModal').getByRole('link', {name: 'View Cart',xact: true });
 
     this.cartTable = page.locator('#cart_info_table');
     this.cartRows = page.locator('#cart_info_table tbody tr');
 
-    // Locate the first product row in the cart.
     this.firstCartRow = this.cartRows.first();
 
-    // Locate the Remove button for the first product.
     this.removeFirstProductButton = this.firstCartRow.locator(
       'a.cart_quantity_delete'
     );
@@ -64,7 +56,6 @@ this.homeLink = page.locator('#header').getByRole('link', { name: 'Home' });
 
 }
 
-  // Click Cart and wait for the cart page URL.
   async clickCart() {
     await Promise.all([
       this.page.waitForURL(/\/view_cart/,{ waitUntil: 'domcontentloaded' }),
@@ -72,17 +63,15 @@ this.homeLink = page.locator('#header').getByRole('link', { name: 'Home' });
     ]);
   }
 
-  // Add the first product to the cart.
   async addFirstProductToCart() {
     await this.firstProductAddToCart.click();
 
-    // Wait for the View Cart link in the popup.
     await this.viewCartPopupLink.waitFor({
       state: 'visible'
     });
   }
 
-  async openCartFromPopup() { ///Open the cart from the popup
+  async openCartFromPopup() { 
   await Promise.all([
     this.page.waitForURL(/\/view_cart/, {
       waitUntil: 'domcontentloaded'
@@ -91,7 +80,6 @@ this.homeLink = page.locator('#header').getByRole('link', { name: 'Home' });
   ]);
 }
 
-  // Remove the first product from the cart.
   async removeFirstProductFromCart() {
     await this.removeFirstProductButton.click();
   }
@@ -100,5 +88,4 @@ this.homeLink = page.locator('#header').getByRole('link', { name: 'Home' });
 }
 }
 
-// Export the HomePage class for use in test files.
 module.exports = { HomePage };
